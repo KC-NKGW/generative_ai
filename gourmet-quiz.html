@@ -1,0 +1,628 @@
+<title>グルメ診断</title>
+<style>
+  :root {
+    --paper: #EDEAE0;
+    --surface: #F7F5EF;
+    --surface-raised: #FFFFFF;
+    --ink: #1E2430;
+    --ink-soft: #4B5160;
+    --indigo: #2E4C6E;
+    --indigo-strong: #1B2A3D;
+    --amber: #A8672A;
+    --amber-soft: #C98A4B;
+    --line: #D8D2C2;
+    --track: #E2DCC9;
+    --shadow: 0 1px 2px rgba(30, 36, 48, 0.06), 0 8px 24px rgba(30, 36, 48, 0.08);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #12161D;
+      --surface: #1B222C;
+      --surface-raised: #212A36;
+      --ink: #E9E6DC;
+      --ink-soft: #AFB4BE;
+      --indigo: #7FA8CC;
+      --indigo-strong: #A9C6E2;
+      --amber: #E0A458;
+      --amber-soft: #F0C185;
+      --line: #303844;
+      --track: #2A323E;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.35);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #12161D;
+    --surface: #1B222C;
+    --surface-raised: #212A36;
+    --ink: #E9E6DC;
+    --ink-soft: #AFB4BE;
+    --indigo: #7FA8CC;
+    --indigo-strong: #A9C6E2;
+    --amber: #E0A458;
+    --amber-soft: #F0C185;
+    --line: #303844;
+    --track: #2A323E;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.35);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--paper);
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(30, 36, 48, 0.05) 1px, transparent 0);
+    background-size: 22px 22px;
+    color: var(--ink);
+    font-family: 'Hiragino Sans', 'Yu Gothic Medium', 'Yu Gothic', 'Noto Sans JP', 'Meiryo', sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: clamp(20px, 5vw, 56px) 16px;
+    line-height: 1.7;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) body {
+      background-image: radial-gradient(circle at 1px 1px, rgba(233, 230, 220, 0.05) 1px, transparent 0);
+    }
+  }
+  :root[data-theme="dark"] body {
+    background-image: radial-gradient(circle at 1px 1px, rgba(233, 230, 220, 0.05) 1px, transparent 0);
+  }
+
+  .app {
+    width: 100%;
+    max-width: 560px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .masthead {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: center;
+    padding: 0 8px;
+  }
+
+  .eyebrow {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--amber);
+  }
+
+  .masthead h1 {
+    margin: 0;
+    font-size: clamp(1.4rem, 4.6vw, 1.9rem);
+    font-weight: 800;
+    line-height: 1.4;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    padding: clamp(20px, 5vw, 36px);
+  }
+
+  .screen[hidden] { display: none; }
+
+  .lead {
+    margin: 0 0 20px;
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+  }
+
+  .btn-primary, .btn-secondary {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 13px 20px;
+    border: 1px solid transparent;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+
+  .btn-primary {
+    width: 100%;
+    background: var(--indigo);
+    color: var(--surface);
+  }
+  .btn-primary:hover { background: var(--indigo-strong); }
+
+  .btn-secondary {
+    width: 100%;
+    background: transparent;
+    border-color: var(--line);
+    color: var(--ink);
+  }
+  .btn-secondary:hover { border-color: var(--amber); color: var(--amber); }
+
+  .btn-primary:active, .btn-secondary:active { transform: scale(0.98); }
+
+  button:focus-visible, .option-card:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 2px;
+  }
+
+  .progress {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+
+  .progress-track {
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--track);
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--amber);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+    width: 0%;
+  }
+
+  .progress-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  #question-text {
+    margin: 0 0 20px;
+    font-size: clamp(1.15rem, 3.6vw, 1.4rem);
+    font-weight: 800;
+    line-height: 1.5;
+    text-wrap: balance;
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  @media (max-width: 460px) {
+    .options-grid { grid-template-columns: 1fr; }
+  }
+
+  .option-card {
+    font-family: inherit;
+    text-align: left;
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 0.96rem;
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .option-card:hover { border-color: var(--amber-soft); }
+  .option-card.is-selected {
+    border-color: var(--amber);
+    background: color-mix(in srgb, var(--amber) 12%, var(--surface-raised));
+  }
+
+  .result-eyebrow {
+    margin: 0 0 4px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--amber);
+  }
+
+  .result-name {
+    margin: 0 0 8px;
+    font-size: clamp(1.8rem, 7vw, 2.4rem);
+    font-weight: 800;
+    color: var(--indigo);
+    line-height: 1.25;
+  }
+
+  .result-catch {
+    margin: 0 0 18px;
+    color: var(--ink-soft);
+    font-size: 1rem;
+  }
+
+  .dish-list {
+    list-style: none;
+    margin: 0 0 8px;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .dish-list li {
+    background: var(--track);
+    border-radius: 5px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--line);
+    margin: 24px 0;
+  }
+
+  .section-title {
+    margin: 0 0 14px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--ink);
+  }
+
+  .bar-row {
+    display: grid;
+    grid-template-columns: 88px 1fr 34px;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 9px;
+    font-size: 0.82rem;
+  }
+
+  .bar-label { color: var(--ink-soft); font-weight: 600; }
+
+  .bar-track {
+    height: 8px;
+    border-radius: 4px;
+    background: var(--track);
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--indigo), var(--amber));
+  }
+
+  .bar-value {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+
+  .runners-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+  }
+
+  .runner-card {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px 14px;
+    background: var(--surface-raised);
+  }
+
+  .runner-name {
+    margin: 0 0 4px;
+    font-weight: 800;
+    color: var(--indigo);
+    font-size: 0.95rem;
+  }
+
+  .runner-catch {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  .retry-row { margin-top: 26px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+
+<div class="app">
+  <div class="masthead">
+    <p class="eyebrow">グルメ診断</p>
+    <h1>今日のあなたに合う、日本のごちそう</h1>
+  </div>
+
+  <div class="card">
+    <section id="screen-intro" class="screen">
+      <p class="lead">6つの質問に答えると、あなたの味の好みに合いそうな日本の地域・グルメジャンルをひとつ診断します。深く考えず、直感で選んでください。</p>
+      <button id="start-btn" class="btn-primary" type="button">診断をはじめる</button>
+    </section>
+
+    <section id="screen-quiz" class="screen" hidden>
+      <div class="progress">
+        <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+        <span class="progress-label" id="progress-label"></span>
+      </div>
+      <h2 id="question-text" tabindex="-1"></h2>
+      <div class="options-grid" id="options-grid"></div>
+    </section>
+
+    <section id="screen-result" class="screen" hidden>
+      <p class="result-eyebrow">あなたへのおすすめは</p>
+      <h2 class="result-name" id="result-name" tabindex="-1"></h2>
+      <p class="result-catch" id="result-catch"></p>
+      <ul class="dish-list" id="result-dishes"></ul>
+
+      <hr class="section-divider">
+      <h3 class="section-title">あなたの味覚プロファイル</h3>
+      <div id="profile-bars"></div>
+
+      <hr class="section-divider">
+      <h3 class="section-title">次点候補</h3>
+      <div class="runners-grid" id="runners-grid"></div>
+
+      <div class="retry-row">
+        <button id="retry-btn" class="btn-secondary" type="button">もう一度診断する</button>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+(function () {
+  var AXES = ['sweet', 'spicy', 'umami', 'rich', 'meat', 'seafood', 'dairy', 'grain', 'adventurous'];
+
+  var AXIS_LABELS = {
+    sweet: '甘さ',
+    spicy: '辛さ',
+    umami: '旨味・だし',
+    rich: 'こってり感',
+    meat: '肉派',
+    seafood: '魚介派',
+    dairy: '乳製品派',
+    grain: '穀物・粉もの派',
+    adventurous: '挑戦心'
+  };
+
+  // Sum of the highest weight each axis can receive across all 6 questions.
+  var AXIS_CAPS = {
+    sweet: 10, spicy: 5, umami: 6, rich: 9, meat: 7,
+    seafood: 9, dairy: 6, grain: 8, adventurous: 7
+  };
+
+  function vec(v) {
+    var out = {};
+    AXES.forEach(function (a) { out[a] = v[a] || 0; });
+    return out;
+  }
+
+  var QUESTIONS = [
+    {
+      text: '好きな味の系統は？',
+      options: [
+        { text: '甘め', weights: { sweet: 3 } },
+        { text: '辛め', weights: { spicy: 3 } },
+        { text: 'だしが効いた旨味系', weights: { umami: 3 } },
+        { text: 'こってり濃厚', weights: { rich: 3 } }
+      ]
+    },
+    {
+      text: 'テンションが上がる食材は？',
+      options: [
+        { text: 'お肉', weights: { meat: 3 } },
+        { text: '魚介', weights: { seafood: 3 } },
+        { text: 'チーズ・ミルク・スイーツ', weights: { dairy: 3, sweet: 1 } },
+        { text: 'お米・麺・野菜', weights: { grain: 3 } }
+      ]
+    },
+    {
+      text: '旅先で楽しみたいのは？',
+      options: [
+        { text: '地元の小さな店を開拓する', weights: { adventurous: 3 } },
+        { text: '昔ながらの有名店の味を堪能する', weights: { umami: 1, rich: 1 } },
+        { text: '甘いものやカフェ巡り', weights: { sweet: 2, dairy: 1 } },
+        { text: 'お酒と肴を楽しむ', weights: { spicy: 1, seafood: 2 } }
+      ]
+    },
+    {
+      text: '好きな食感は？',
+      options: [
+        { text: 'とろ〜り濃厚', weights: { dairy: 1, rich: 2 } },
+        { text: 'パリッと香ばしい', weights: { spicy: 1, meat: 2 } },
+        { text: 'もちもち', weights: { grain: 3 } },
+        { text: 'ぷりぷり新鮮', weights: { seafood: 3 } }
+      ]
+    },
+    {
+      text: '週末の気分は？',
+      options: [
+        { text: '新しい味に挑戦したい', weights: { adventurous: 3 } },
+        { text: '昔ながらの安心する味', weights: { umami: 1, grain: 1 } },
+        { text: '特別なごちそう気分', weights: { rich: 2, meat: 1 } },
+        { text: 'ほっと一息、甘いもの', weights: { sweet: 3 } }
+      ]
+    },
+    {
+      text: '一緒に食べたい相手は？',
+      options: [
+        { text: '家族とわいわい', weights: { meat: 1, rich: 1 } },
+        { text: '友人とシェアしながら', weights: { seafood: 1, adventurous: 1 } },
+        { text: '一人でじっくり', weights: { umami: 1, grain: 1 } },
+        { text: '大切な人と特別な時間', weights: { dairy: 1, sweet: 1 } }
+      ]
+    }
+  ];
+
+  var DESTINATIONS = [
+    { name: '十勝（北海道）', catchPhrase: '牧場の恵みがそのままごちそうになる、乳製品好きの楽園。', dishes: ['十勝チーズ', 'ソフトクリーム', '豚丼'], vector: vec({ sweet: 2, rich: 1, dairy: 3, grain: 1 }) },
+    { name: '博多（福岡）', catchPhrase: '白濁スープの旨味に、一度ハマったら抜け出せない。', dishes: ['豚骨ラーメン', 'もつ鍋', '辛子明太子'], vector: vec({ spicy: 2, umami: 3, rich: 3, meat: 2, seafood: 1, grain: 1 }) },
+    { name: '金沢（石川）', catchPhrase: '日本海の恵みを、上品な出汁とともに味わう。', dishes: ['のどぐろ', '海鮮丼', '加賀料理'], vector: vec({ sweet: 1, umami: 3, rich: 1, seafood: 3 }) },
+    { name: '香川（うどん県）', catchPhrase: 'コシと出汁だけで語れる、シンプルな幸せ。', dishes: ['讃岐うどん', '骨付き鳥', 'オリーブ'], vector: vec({ umami: 2, grain: 3 }) },
+    { name: '沖縄', catchPhrase: '豚肉と島野菜が主役の、南国のごちそう文化。', dishes: ['ラフテー', 'ゴーヤーチャンプルー', '沖縄そば'], vector: vec({ sweet: 1, spicy: 1, rich: 2, meat: 3, seafood: 1, adventurous: 2 }) },
+    { name: '京都', catchPhrase: 'だしの奥深さで魅せる、引き算の美学。', dishes: ['湯豆腐', '京漬物', 'おばんざい'], vector: vec({ sweet: 1, umami: 3, seafood: 1, grain: 2 }) },
+    { name: '大阪', catchPhrase: 'ソースと鉄板の香りに包まれる、がっつり系の聖地。', dishes: ['たこ焼き', 'お好み焼き', '串カツ'], vector: vec({ umami: 1, rich: 3, meat: 1, grain: 3 }) },
+    { name: '山形', catchPhrase: '果実の甘さと米どころの実力が光る。', dishes: ['さくらんぼ', '米沢牛', '板そば'], vector: vec({ sweet: 3, umami: 1, meat: 1, grain: 2 }) },
+    { name: '静岡', catchPhrase: '駿河湾の幸とお茶の香りが、日常にある土地。', dishes: ['桜えび', 'うなぎ', 'お茶スイーツ'], vector: vec({ sweet: 1, umami: 1, seafood: 3, grain: 1 }) },
+    { name: '熊本', catchPhrase: '馬肉と個性派グルメで攻める、九州の実力派。', dishes: ['馬刺し', 'からし蓮根', '太平燕'], vector: vec({ spicy: 2, umami: 1, rich: 1, meat: 3, adventurous: 2 }) },
+    { name: '名古屋', catchPhrase: '濃厚な赤味噌文化が、舌を離さない。', dishes: ['味噌カツ', 'ひつまぶし', '手羽先'], vector: vec({ spicy: 1, umami: 2, rich: 3, meat: 2 }) },
+    { name: '新潟', catchPhrase: 'お米と発酵の、実直な美味しさ。', dishes: ['コシヒカリ', '日本酒', 'のっぺ'], vector: vec({ umami: 2, seafood: 1, grain: 3 }) },
+    { name: '鹿児島', catchPhrase: '黒豚とさつまいもの甘みが香る、南九州。', dishes: ['黒豚しゃぶしゃぶ', 'さつま揚げ', '白熊'], vector: vec({ sweet: 2, umami: 1, rich: 1, meat: 3, adventurous: 1 }) },
+    { name: '長崎', catchPhrase: '和華蘭が溶け合う、日本一エキゾチックな港町グルメ。', dishes: ['ちゃんぽん', '皿うどん', 'カステラ'], vector: vec({ sweet: 1, umami: 2, rich: 1, seafood: 2, adventurous: 3 }) },
+    { name: '宇都宮', catchPhrase: '羽根つき餃子を、とことん食べ比べる街。', dishes: ['宇都宮餃子', 'レモン牛乳', 'いちご'], vector: vec({ spicy: 1, umami: 1, rich: 1, meat: 1, grain: 2 }) },
+    { name: '愛媛', catchPhrase: '柑橘の爽やかさと、瀬戸内の魚介が主役。', dishes: ['鯛めし', 'みかん', 'じゃこ天'], vector: vec({ sweet: 2, umami: 1, seafood: 3 }) },
+    { name: '福井', catchPhrase: '冬の王様・カニと、そばの実直な旨さ。', dishes: ['越前ガニ', 'おろしそば', 'ソースカツ丼'], vector: vec({ umami: 2, seafood: 3, grain: 2 }) }
+  ];
+
+  var currentQuestion = 0;
+  var userAxis = vec({});
+
+  var screenIntro = document.getElementById('screen-intro');
+  var screenQuiz = document.getElementById('screen-quiz');
+  var screenResult = document.getElementById('screen-result');
+  var progressFill = document.getElementById('progress-fill');
+  var progressLabel = document.getElementById('progress-label');
+  var questionText = document.getElementById('question-text');
+  var optionsGrid = document.getElementById('options-grid');
+
+  function showScreen(el) {
+    [screenIntro, screenQuiz, screenResult].forEach(function (s) { s.hidden = (s !== el); });
+  }
+
+  function renderQuestion() {
+    var q = QUESTIONS[currentQuestion];
+    progressFill.style.width = (currentQuestion / QUESTIONS.length * 100) + '%';
+    progressLabel.textContent = '質問 ' + (currentQuestion + 1) + ' / ' + QUESTIONS.length;
+    questionText.textContent = q.text;
+    optionsGrid.innerHTML = '';
+    q.options.forEach(function (opt, i) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'option-card';
+      btn.textContent = opt.text;
+      btn.addEventListener('click', function () { selectOption(btn, opt); });
+      optionsGrid.appendChild(btn);
+    });
+    questionText.focus();
+  }
+
+  function selectOption(btn, opt) {
+    Array.prototype.forEach.call(optionsGrid.children, function (c) { c.classList.remove('is-selected'); });
+    btn.classList.add('is-selected');
+    AXES.forEach(function (a) {
+      if (opt.weights[a]) userAxis[a] += opt.weights[a];
+    });
+    setTimeout(function () {
+      currentQuestion++;
+      if (currentQuestion < QUESTIONS.length) {
+        renderQuestion();
+      } else {
+        progressFill.style.width = '100%';
+        renderResult();
+      }
+    }, 220);
+  }
+
+  function normalizedUser() {
+    var n = {};
+    AXES.forEach(function (a) { n[a] = (userAxis[a] / AXIS_CAPS[a]) * 3; });
+    return n;
+  }
+
+  function cosineSim(a, b) {
+    var dot = 0, na = 0, nb = 0;
+    AXES.forEach(function (k) {
+      dot += a[k] * b[k];
+      na += a[k] * a[k];
+      nb += b[k] * b[k];
+    });
+    if (na === 0 || nb === 0) return 0;
+    return dot / (Math.sqrt(na) * Math.sqrt(nb));
+  }
+
+  function renderResult() {
+    var nUser = normalizedUser();
+    var ranked = DESTINATIONS.map(function (d) {
+      return { d: d, score: cosineSim(nUser, d.vector) };
+    }).sort(function (a, b) { return b.score - a.score; });
+
+    var top = ranked[0].d;
+    var runners = ranked.slice(1, 4).map(function (r) { return r.d; });
+
+    document.getElementById('result-name').textContent = top.name;
+    document.getElementById('result-catch').textContent = top.catchPhrase;
+
+    var dishList = document.getElementById('result-dishes');
+    dishList.innerHTML = '';
+    top.dishes.forEach(function (dish) {
+      var li = document.createElement('li');
+      li.textContent = dish;
+      dishList.appendChild(li);
+    });
+
+    var bars = document.getElementById('profile-bars');
+    bars.innerHTML = '';
+    var sortedAxes = AXES.slice().sort(function (a, b) {
+      return (userAxis[b] / AXIS_CAPS[b]) - (userAxis[a] / AXIS_CAPS[a]);
+    });
+    sortedAxes.forEach(function (a) {
+      var pct = Math.min(100, Math.round((userAxis[a] / AXIS_CAPS[a]) * 100));
+      var row = document.createElement('div');
+      row.className = 'bar-row';
+      row.innerHTML =
+        '<span class="bar-label"></span>' +
+        '<span class="bar-track"><span class="bar-fill" style="width:' + pct + '%"></span></span>' +
+        '<span class="bar-value"></span>';
+      row.querySelector('.bar-label').textContent = AXIS_LABELS[a];
+      row.querySelector('.bar-value').textContent = pct + '%';
+      bars.appendChild(row);
+    });
+
+    var runnersGrid = document.getElementById('runners-grid');
+    runnersGrid.innerHTML = '';
+    runners.forEach(function (r) {
+      var card = document.createElement('div');
+      card.className = 'runner-card';
+      var name = document.createElement('p');
+      name.className = 'runner-name';
+      name.textContent = r.name;
+      var catchP = document.createElement('p');
+      catchP.className = 'runner-catch';
+      catchP.textContent = r.catchPhrase;
+      card.appendChild(name);
+      card.appendChild(catchP);
+      runnersGrid.appendChild(card);
+    });
+
+    showScreen(screenResult);
+    document.getElementById('result-name').focus();
+  }
+
+  document.getElementById('start-btn').addEventListener('click', function () {
+    currentQuestion = 0;
+    userAxis = vec({});
+    showScreen(screenQuiz);
+    renderQuestion();
+  });
+
+  document.getElementById('retry-btn').addEventListener('click', function () {
+    currentQuestion = 0;
+    userAxis = vec({});
+    showScreen(screenQuiz);
+    renderQuestion();
+  });
+})();
+</script>
