@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}お墓飯 - {{ entry.dish_name }}{% endblock %}
+{% block content %}
+<div class="card detail-layout">
+  {% if entry.screenshot_filename %}
+    <img class="detail-image" src="{{ url_for('static', filename='uploads/' + entry.screenshot_filename) }}" alt="{{ entry.dish_name }}">
+  {% endif %}
+
+  <span class="badge {{ 'badge-out' if entry.is_eating_out else 'badge-home' }}">{{ '外食' if entry.is_eating_out else '内食' }}</span>
+  <h2>{{ entry.dish_name }}</h2>
+
+  <dl>
+    <div class="detail-row"><dt>食べた日</dt><dd>{{ entry.eaten_date }}</dd></div>
+    {% if entry.is_eating_out and entry.restaurant_name %}
+    <div class="detail-row"><dt>レストラン名</dt><dd>{{ entry.restaurant_name }}</dd></div>
+    {% endif %}
+    {% if entry.is_eating_out and entry.location %}
+    <div class="detail-row"><dt>場所</dt><dd>{{ entry.location }}</dd></div>
+    {% endif %}
+    {% if entry.reference_url %}
+    <div class="detail-row"><dt>参考URL</dt><dd><a href="{{ entry.reference_url }}" target="_blank" rel="noopener">{{ entry.reference_url }}</a></dd></div>
+    {% endif %}
+    {% if entry.comment %}
+    <div class="detail-row"><dt>感想</dt><dd>{{ entry.comment }}</dd></div>
+    {% endif %}
+  </dl>
+
+  <div class="btn-row">
+    <a href="{{ url_for('entry_edit', entry_id=entry.id) }}" class="btn btn-secondary">編集する</a>
+    <form method="post" action="{{ url_for('entry_delete', entry_id=entry.id) }}" onsubmit="return confirm('この記録を削除しますか？');">
+      <button type="submit" class="btn btn-danger">削除する</button>
+    </form>
+    <a href="{{ url_for('entries_list') }}" class="btn btn-secondary">一覧に戻る</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}お墓飯 - 一覧{% endblock %}
+{% block content %}
+<div class="card">
+  <form method="get" action="{{ url_for('entries_list') }}" class="search-bar">
+    <input type="text" name="q" value="{{ q }}" placeholder="料理名・店名・感想で検索">
+    <select name="type" onchange="this.form.submit()">
+      <option value="" {% if not type_filter %}selected{% endif %}>すべて</option>
+      <option value="out" {% if type_filter == 'out' %}selected{% endif %}>外食のみ</option>
+      <option value="home" {% if type_filter == 'home' %}selected{% endif %}>内食のみ</option>
+    </select>
+    <select name="sort" onchange="this.form.submit()">
+      <option value="date_desc" {% if sort == 'date_desc' %}selected{% endif %}>食べた日が新しい順</option>
+      <option value="date_asc" {% if sort == 'date_asc' %}selected{% endif %}>食べた日が古い順</option>
+      <option value="dish_name" {% if sort == 'dish_name' %}selected{% endif %}>料理名順</option>
+    </select>
+    <button type="submit" class="btn btn-secondary">検索</button>
+  </form>
+</div>
+
+<div class="export-links">
+  <a href="{{ url_for('export_excel', q=q, type=type_filter, sort=sort) }}" class="btn btn-secondary">Excelで書き出す</a>
+  <a href="{{ url_for('export_pdf', q=q, type=type_filter, sort=sort) }}" class="btn btn-secondary">PDFで書き出す</a>
+</div>
+
+{% if entries %}
+<div class="entry-grid">
+  {% for e in entries %}
+  <a class="entry-card" href="{{ url_for('entry_detail', entry_id=e.id) }}">
+    {% if e.screenshot_filename %}
+      <img class="entry-thumb" src="{{ url_for('static', filename='uploads/' + e.screenshot_filename) }}" alt="{{ e.dish_name }}">
+    {% else %}
+      <div class="entry-thumb-placeholder">写真なし</div>
+    {% endif %}
+    <div class="entry-card-body">
+      <span class="badge {{ 'badge-out' if e.is_eating_out else 'badge-home' }}">{{ '外食' if e.is_eating_out else '内食' }}</span>
+      <div class="entry-dish">{{ e.dish_name }}</div>
+      <div class="entry-sub">
+        {{ e.eaten_date }}{% if e.is_eating_out and e.restaurant_name %} ・ {{ e.restaurant_name }}{% endif %}{% if e.is_eating_out and e.location %} ・ {{ e.location }}{% endif %}
+      </div>
+      {% if e.comment %}<div class="entry-comment">{{ e.comment }}</div>{% endif %}
+    </div>
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">まだ記録がありません。「記録する」からお墓飯を追加しましょう。</div>
+{% endif %}
+{% endblock %}

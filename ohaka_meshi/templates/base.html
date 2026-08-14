@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}お墓飯{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hachi+Maru+Pop&family=Yusei+Magic&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="site-header">
+      <div>
+        <h1 class="site-title"><a href="{{ url_for('index') }}">お墓飯</a></h1>
+        <p class="site-tagline">一生分の"最高の一皿"を、こっそり記録。</p>
+      </div>
+      <nav class="site-nav">
+        <a href="{{ url_for('index') }}">記録する</a>
+        <a href="{{ url_for('entries_list') }}">一覧を見る</a>
+      </nav>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash flash-{{ 'error' if category == 'error' else 'success' }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </div>
+  {% block scripts %}{% endblock %}
+</body>
+</html>
