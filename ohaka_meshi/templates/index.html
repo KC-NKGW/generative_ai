@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}お墓飯 - 記録する{% endblock %}
+{% block content %}
+<div class="card">
+  <form method="post" action="{{ url_for('entries_create') }}" enctype="multipart/form-data" id="entry-form">
+    {% include "_entry_form.html" %}
+    <div class="btn-row">
+      <button type="submit" class="btn btn-primary">記録する</button>
+      <a href="{{ url_for('entries_list') }}" class="btn btn-secondary">一覧を見る</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/entry-form.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
+  <g opacity="0.5">
+    <!-- tombstone -->
+    <g transform="translate(40,40)">
+      <rect x="10" y="78" width="70" height="14" rx="6" fill="#C98A4B" stroke="#5B4636" stroke-width="3"/>
+      <path d="M14 84 L14 34 Q14 4 45 4 Q76 4 76 34 L76 84 Z" fill="#F4B6C6" stroke="#5B4636" stroke-width="3" stroke-linejoin="round"/>
+      <circle cx="32" cy="42" r="4" fill="#5B4636"/>
+      <circle cx="58" cy="42" r="4" fill="#5B4636"/>
+      <path d="M33 56 Q45 65 57 56" stroke="#5B4636" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M30 24 Q45 14 60 24" stroke="#5B4636" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.5"/>
+    </g>
+    <!-- flower -->
+    <g transform="translate(180,60)">
+      <line x1="0" y1="10" x2="0" y2="55" stroke="#8FBF8F" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="-9" cy="-2" r="8" fill="#F4A6BE"/>
+      <circle cx="9" cy="-2" r="8" fill="#F4A6BE"/>
+      <circle cx="0" cy="-10" r="8" fill="#F4A6BE"/>
+      <circle cx="-6" cy="6" r="8" fill="#F4A6BE"/>
+      <circle cx="0" cy="0" r="6" fill="#F6D368"/>
+    </g>
+    <!-- rice bowl offering -->
+    <g transform="translate(70,190)">
+      <path d="M0 14 Q0 34 22 34 Q44 34 44 14 Z" fill="#F7F5EF" stroke="#5B4636" stroke-width="3"/>
+      <ellipse cx="22" cy="14" rx="22" ry="7" fill="#FFFFFF" stroke="#5B4636" stroke-width="3"/>
+      <path d="M14 -2 Q12 -12 18 -18" stroke="#C9C4B6" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+      <path d="M26 -2 Q28 -14 22 -20" stroke="#C9C4B6" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+    </g>
+    <!-- sparkles -->
+    <g fill="#F6D368">
+      <path d="M225 170 l3 9 l9 3 l-9 3 l-3 9 l-3 -9 l-9 -3 l9 -3 z"/>
+      <path d="M245 230 l2 6 l6 2 l-6 2 l-2 6 l-2 -6 l-6 -2 l6 -2 z"/>
+    </g>
+  </g>
+</svg>

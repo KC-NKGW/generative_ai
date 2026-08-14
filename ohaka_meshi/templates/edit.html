@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}お墓飯 - 編集{% endblock %}
+{% block content %}
+<div class="card">
+  <form method="post" action="{{ url_for('entry_edit', entry_id=entry.id) }}" enctype="multipart/form-data" id="entry-form">
+    {% include "_entry_form.html" %}
+    <div class="btn-row">
+      <button type="submit" class="btn btn-primary">更新する</button>
+      <a href="{{ url_for('entry_detail', entry_id=entry.id) }}" class="btn btn-secondary">キャンセル</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/entry-form.js') }}"></script>
+{% endblock %}

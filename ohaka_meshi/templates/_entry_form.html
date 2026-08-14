@@ -1,0 +1,74 @@
+{% set e = entry if entry is defined else None %}
+<div class="field">
+  <label for="dish_name">料理名 *</label>
+  <input type="text" id="dish_name" name="dish_name" required autofocus
+         value="{{ e.dish_name if e else '' }}" placeholder="例）〆鯖の炙り">
+</div>
+
+<div class="field">
+  <label>区分</label>
+  <div class="segmented" id="type-toggle">
+    <input type="radio" id="type-out" name="is_eating_out" value="1"
+           {% if not e or e.is_eating_out %}checked{% endif %}>
+    <label for="type-out">外食</label>
+    <input type="radio" id="type-home" name="is_eating_out" value="0"
+           {% if e and not e.is_eating_out %}checked{% endif %}>
+    <label for="type-home">内食</label>
+  </div>
+</div>
+
+<div id="out-fields" {% if e and not e.is_eating_out %}hidden{% endif %}>
+  <div class="field">
+    <label for="restaurant_name">レストラン名</label>
+    <input type="text" id="restaurant_name" name="restaurant_name" list="restaurant-list"
+           value="{{ e.restaurant_name if e and e.restaurant_name else '' }}">
+    <datalist id="restaurant-list">
+      {% for name in restaurant_names %}<option value="{{ name }}"></option>{% endfor %}
+    </datalist>
+  </div>
+  <div class="field">
+    <label for="location">場所</label>
+    <input type="text" id="location" name="location" list="location-list"
+           value="{{ e.location if e and e.location else '' }}">
+    <datalist id="location-list">
+      {% for loc in locations %}<option value="{{ loc }}"></option>{% endfor %}
+    </datalist>
+  </div>
+</div>
+
+<div class="field">
+  <label for="eaten_date">食べた日</label>
+  <input type="date" id="eaten_date" name="eaten_date" value="{{ e.eaten_date if e else today }}">
+</div>
+
+<div class="field">
+  <label for="reference_url">参考URL</label>
+  <input type="url" id="reference_url" name="reference_url" placeholder="https://..."
+         value="{{ e.reference_url if e and e.reference_url else '' }}">
+  <p class="hint">食べログ・デリッシュキッチン等のURLを貼ると、タイトルや画像の自動取得を試みます（外食はレストラン名欄、内食は料理名欄に入ります。場所が取得できた場合はそちらも自動入力します。うまくいかない場合は手動で入力してください）。</p>
+  <input type="hidden" name="ogp_image_url" id="ogp_image_url" value="">
+  <div class="url-preview" id="url-preview">
+    <img id="url-preview-img" src="" alt="" hidden>
+    <div class="url-preview-text" id="url-preview-text"></div>
+  </div>
+</div>
+
+<div class="field">
+  <label for="screenshot">スクリーンショット</label>
+  <input type="file" id="screenshot" name="screenshot" accept="image/*">
+  <p class="hint">画像をコピーしてこのフォーム上で貼り付ける（Ctrl+V）こともできます。</p>
+  <div class="screenshot-preview" id="screenshot-preview">
+    <img id="screenshot-preview-img" src="" alt="">
+  </div>
+  {% if e and e.screenshot_filename %}
+    <div class="screenshot-preview visible">
+      <img src="{{ url_for('static', filename='uploads/' + e.screenshot_filename) }}" alt="現在のスクリーンショット">
+    </div>
+    <label class="hint"><input type="checkbox" name="remove_screenshot" value="1"> このスクリーンショットを削除する</label>
+  {% endif %}
+</div>
+
+<div class="field">
+  <label for="comment">感想</label>
+  <textarea id="comment" name="comment" placeholder="お墓に供えてほしい理由など">{{ e.comment if e and e.comment else '' }}</textarea>
+</div>
