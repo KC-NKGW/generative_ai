@@ -16,6 +16,7 @@ import images
 from export_excel import build_excel
 from export_pdf import build_pdf
 from ogp import fetch_url_metadata
+from recommend import build_recommendation
 
 app = Flask(__name__)
 app.secret_key = "ohaka-meshi-local-secret"
@@ -164,6 +165,15 @@ def export_pdf():
     buffer = build_pdf(entries)
     filename = f"ohaka_meshi_{date.today().strftime('%Y%m%d')}.pdf"
     return send_file(buffer, as_attachment=True, download_name=filename, mimetype="application/pdf")
+
+
+@app.route("/recommend", methods=["GET", "POST"])
+def recommend():
+    result = None
+    if request.method == "POST":
+        entries = db.list_entries()
+        result = build_recommendation(entries)
+    return render_template("recommend.html", result=result)
 
 
 @app.route("/api/fetch-url-metadata", methods=["POST"])
