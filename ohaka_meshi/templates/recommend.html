@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}お墓飯 - おすすめ{% endblock %}
+{% block content %}
+<div class="card">
+  <p>
+    これまでに記録したお墓飯候補の傾向から、あなたのパソコンの中だけで動く小さめのAI（Qwen2.5という無料のAIモデル）が、
+    次に試したい料理・お店のジャンルを提案します。
+  </p>
+  <p class="hint">
+    記録データは外部には一切送信されず、お使いのパソコンの中だけで処理されます。実在するお店の検索は行わないため、
+    提案は「こんな系統の料理・お店」という一般的な傾向にとどまります。
+  </p>
+  <form method="post" action="{{ url_for('recommend') }}" id="recommend-form">
+    <button type="submit" class="btn btn-primary" id="recommend-submit">提案してもらう</button>
+  </form>
+</div>
+
+{% if result %}
+  {% if result.ok %}
+    <div class="suggestion-list">
+      {% for s in result.suggestions %}
+        <div class="suggestion-card">
+          <div class="suggestion-emoji" aria-hidden="true">{{ s.emoji }}</div>
+          <div class="suggestion-body">
+            {% if s.dish_name %}<div class="suggestion-dish">{{ s.dish_name }}</div>{% endif %}
+            <div class="suggestion-reason">{{ s.reason }}</div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <p class="hint">※絵文字はイメージです。実店舗の検索は行っていません。記録の傾向からの一般的な提案です。</p>
+  {% elif result.reason == 'no_entries' %}
+    <div class="card">
+      <p>まだ記録がありません。まずは「記録する」からお墓飯を追加してください。</p>
+    </div>
+  {% elif result.reason in ('ollama_not_running', 'model_not_found') %}
+    <div class="card">
+      <p>ローカルLLM（Ollama）が見つかりませんでした。以下の手順でセットアップしてください。</p>
+      <ol>
+        <li><a href="https://ollama.com" target="_blank" rel="noopener">https://ollama.com</a> からOllamaをインストールする（インストール後、自動的に起動します）</li>
+        <li>コマンドプロンプトで <code>ollama pull qwen2.5:3b</code> を実行し、モデルをダウンロードする（初回のみ、数GBのダウンロードが発生します）</li>
+        <li>完了したら、もう一度「提案してもらう」を押してください</li>
+      </ol>
+    </div>
+  {% elif result.reason == 'timeout' %}
+    <div class="card">
+      <p>応答に時間がかかりすぎました。しばらくしてからもう一度お試しください。</p>
+    </div>
+  {% else %}
+    <div class="card">
+      <p>提案の生成中にエラーが発生しました。Ollamaが起動しているか確認して、もう一度お試しください。</p>
+    </div>
+  {% endif %}
+{% endif %}
+{% endblock %}
+{% block scripts %}
+<script>
+  document.getElementById("recommend-form").addEventListener("submit", function () {
+    var btn = document.getElementById("recommend-submit");
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner" aria-hidden="true"></span>考え中です…';
+  });
+</script>
+{% endblock %}

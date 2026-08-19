@@ -221,6 +221,22 @@ textarea { resize: vertical; min-height: 80px; }
 .btn-danger { background: var(--surface-raised); color: var(--danger); border-color: var(--danger); }
 .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
 
+.btn:disabled { cursor: default; opacity: 0.85; }
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  display: inline-block;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 .hint { font-size: 0.8rem; color: var(--ink-soft); }
 
 .url-preview {
@@ -319,6 +335,39 @@ textarea { resize: vertical; min-height: 80px; }
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+.suggestion-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.suggestion-card {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  padding: 16px;
+}
+
+.suggestion-emoji {
+  flex: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: var(--track);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+}
+
+.suggestion-body { display: flex; flex-direction: column; gap: 6px; }
+.suggestion-dish { font-weight: 800; font-size: 1.1rem; }
+.suggestion-reason { font-size: 1rem; line-height: 1.7; color: var(--ink); }
 
 .badge {
   display: inline-block;
