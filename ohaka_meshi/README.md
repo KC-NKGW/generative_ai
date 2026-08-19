@@ -2,6 +2,10 @@
 
 「自分が亡くなった時にお供えしてほしいレベルでおいしかったご飯」を記録しておくための、個人用の記録アプリです。ローカルのPCだけで動作し、外部への公開は行いません。
 
+| 記録する | 一覧を見る | おすすめ |
+|---|---|---|
+| <img src="docs/screenshots/record.png" width="280"> | <img src="docs/screenshots/list.png" width="280"> | <img src="docs/screenshots/recommend.png" width="280"> |
+
 ## 使い方
 
 1. 初回のみ [python.org](https://www.python.org/) からPython 3.11以降をインストールしてください（インストーラーで「Add python.exe to PATH」に必ずチェック）。
