@@ -1,0 +1,27 @@
+apiVersion: v1
+data:
+  2026-01-05_new_year_goals.md: "# 2026年の目標\r\n\r\n今年はDockerとKubernetesをちゃんと触れるようになりたい。\r\nあと機械学習アプリのバックエンド設計も勉強する。\r\nFastAPIとPythonの型ヒントに慣れることも目標のひとつ。\r\n"
+  2026-01-12_docker_notes.md: "# Dockerメモ\r\n\r\nDockerfileはレイヤーキャッシュを意識して書くとビルドが速くなる。\r\nrequirements.txtを先にCOPYしてpip
+    installしてから、\r\nアプリのソースコードをCOPYするのが定石。\r\n\r\ndocker-composeを使うと複数コンテナの依存関係（depends_on）を\r\n宣言的に書けて便利。\r\n"
+  2026-01-20_kubernetes_intro.md: "# Kubernetes入門メモ\r\n\r\nPodはコンテナの最小デプロイ単位。\r\nDeploymentがPodのレプリカ数を管理してくれる。\r\nConfigMapとSecretで設定と機密情報を分離するのがベストプラクティス。\r\nminikubeやkindでローカルにクラスタを立てて練習できる。\r\n"
+  2026-02-02_rag_architecture.md: "# RAGアーキテクチャの整理\r\n\r\nRAG（Retrieval-Augmented
+    Generation）は、\r\n質問をベクトル化してベクトルDBから関連文書を検索し、\r\nその文書をコンテキストとしてLLMに渡して回答を生成する仕組み。\r\n\r\nベクトルDBの候補としてQdrant、pgvector、Chromaなどがある。\r\n今回はQdrantを使うことにした。公式Dockerイメージがあって導入が楽。\r\n"
+  2026-02-10_embedding_memo.md: "# embeddingモデルのメモ\r\n\r\nClaude自体にはembedding APIがないので、\r\nsentence-transformersのようなローカルモデルか、\r\nVoyage
+    AIのようなクラウドAPIを別途使う必要がある。\r\n\r\nall-MiniLM-L6-v2は軽量でCPUでも十分な速度が出る。\r\n次元数は384で、精度と速度のバランスが良い。\r\n"
+  2026-02-18_fastapi_tips.md: "# FastAPI Tips\r\n\r\npydanticのBaseModelでリクエスト/レスポンスのスキーマを定義すると\r\n自動でバリデーションとSwagger
+    UIのドキュメントが生成される。\r\n\r\n非同期処理はasync defで書けるが、\r\nCPUバウンドな処理（embeddingの計算など）は\r\n別スレッドやプロセスに逃がした方がいい場合もある。\r\n"
+  2026-02-25_weekend_hiking.md: "# 週末のハイキング記録\r\n\r\n近くの低山に登った。天気が良くて富士山がよく見えた。\r\n標高差は400mくらいで、初心者にもちょうどいいコースだった。\r\n下山後に食べたそばがとても美味しかった。\r\n"
+  2026-03-03_book_review_clean_architecture.md: "# 読書メモ: Clean Architecture\r\n\r\n依存関係の方向を内側に向けるという原則が印象的だった。\r\nビジネスロジックをフレームワークやDBの詳細から切り離すことで、\r\nテストがしやすくなり、技術選定の変更にも強くなる。\r\n\r\nマイクロサービス設計にもこの考え方は応用できそう。\r\n"
+  2026-03-11_qdrant_setup.md: "# Qdrantセットアップメモ\r\n\r\ndocker run -p 6333:6333 qdrant/qdrant
+    で起動できる。\r\nコレクションを作成するときはベクトルの次元数と距離関数\r\n（Cosine, Euclid, Dotなど）を指定する必要がある。\r\n\r\nPythonクライアントはqdrant-clientパッケージを使う。\r\nupsertでポイント（id,
+    vector, payload）を登録する。\r\n"
+  2026-03-19_cooking_curry.md: "# カレーを作った\r\n\r\n玉ねぎをじっくり炒めるのがコツだと聞いたので、\r\n今回は40分くらいかけて飴色になるまで炒めた。\r\nいつもよりコクが出て美味しくできた。\r\n"
+  2026-03-27_llm_prompt_design.md: "# LLMプロンプト設計メモ\r\n\r\nRAGでは検索結果をどうプロンプトに埋め込むかが重要。\r\n出典（ファイル名など）を明示させることで、\r\n回答の根拠を後から確認できるようにするのが良い設計。\r\n\r\nシステムプロンプトで「わからない場合はわからないと答える」\r\nと指示しておくとハルシネーションを減らせる。\r\n"
+  2026-04-02_job_hunting_notes.md: "# 転職活動メモ\r\n\r\n求人票でよく見る要件: LLM/AIを使ったアプリ開発経験、\r\nバックエンドのAPI設計、Docker/Kubernetesの実務経験。\r\n\r\nポートフォリオとして個人用RAGアシスタントを\r\nDocker化して公開するのが良さそう。\r\n"
+  2026-04-09_running_log.md: "# ランニング記録\r\n\r\n朝5kmを25分で走った。ペースは以前より少し上がってきた。\r\n週3回のペースを維持できている。\r\n"
+  2026-04-15_microservice_design.md: "# マイクロサービス設計メモ\r\n\r\nサービスごとに責務を分離すると、デプロイやスケーリングを\r\n独立して行えるメリットがある。一方でサービス間通信の\r\n複雑さやデータの一貫性の管理が課題になる。\r\n\r\nデータ処理（ingest）と配信（API）を分けるのは\r\nよくあるパターンのひとつ。\r\n"
+  2026-04-22_coffee_notes.md: "# コーヒーのメモ\r\n\r\n浅煎りの豆はフルーティーな酸味が強く出る。\r\nハンドドリップではお湯の温度を90度前後にすると\r\n雑味が出にくいと感じた。\r\n"
+kind: ConfigMap
+metadata:
+  name: notes-data
+  namespace: personal-rag

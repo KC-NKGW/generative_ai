@@ -1,0 +1,6 @@
+# Kubernetes入門メモ
+
+Podはコンテナの最小デプロイ単位。
+DeploymentがPodのレプリカ数を管理してくれる。
+ConfigMapとSecretで設定と機密情報を分離するのがベストプラクティス。
+minikubeやkindでローカルにクラスタを立てて練習できる。
