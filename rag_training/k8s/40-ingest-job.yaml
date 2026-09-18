@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ingest
+  namespace: personal-rag
+spec:
+  backoffLimit: 2
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: ingest
+          image: personal-rag-assistant-ingest:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: app-config
+          volumeMounts:
+            - name: notes
+              mountPath: /data/notes
+      volumes:
+        - name: notes
+          configMap:
+            name: notes-data

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: personal-rag
+data:
+  QDRANT_HOST: "qdrant"
+  QDRANT_PORT: "6333"
+  COLLECTION_NAME: "notes"
+  OLLAMA_HOST: "http://ollama:11434"
+  OLLAMA_MODEL: "llama3.2:1b"
+  NOTES_DIR: "/data/notes"
